@@ -1,9 +1,12 @@
 const express = require('express');
-const app = express();
 const morgan = require('morgan');
 const mysql = require('mysql');
 const myConnection = require('express-myconnection');
 const path = require('path');
+const app = express();
+
+const customerRoutes = require('./routes/customer');
+
 
 app.set('port', process.env.PORT || 3000);
 
@@ -18,6 +21,12 @@ app.use(myConnection(mysql, {
     port: 3306,
     database: 'mysqlnode'
 }, 'single'));
+
+//routes
+app.use('/', customerRoutes);
+
+//static files
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.listen(app.get('port'), () => {
 	console.log('Servidor Corriendo en el puerto 3000');
